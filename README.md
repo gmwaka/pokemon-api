@@ -1,6 +1,6 @@
 # README
 
-Controlled Health website API built with [Ruby on Rails](https://rubyonrails.org/) as API and using [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth).
+Pokemon API built with [Ruby on Rails](https://rubyonrails.org/).
 
 <table>
   <tr>
@@ -41,4 +41,10 @@ rails db:seed
 
 # run the project
 rails s
+```
+
+To run the tests:
+
+```bash
+bundle exec rspec
 ```
