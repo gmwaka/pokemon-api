@@ -75,6 +75,74 @@ describe 'Pokemon API testing', type: :request do
                 ]
             )
         end
+        it 'return pokemons limit per page' do
+            get '/api/v1/pokemons', params: { per_page: 1 }
+
+            expect(response).to have_http_status(:success)
+            expect(JSON.parse(response.body).size).to eq(1)
+            expect(JSON.parse(response.body)).to eq(
+                [
+                    {
+                        "id" => 1,
+                        "name" => "My Pokemon 1",
+                        "type1" => "My type 1",
+                        "type2" => "My type 2",
+                        "total" => 2,
+                        "hp" => 3,
+                        "attack" => 23,
+                        "defense" => 34,
+                        "spatk" => 3,
+                        "spdef" => 4,
+                        "speed" => 7,
+                        "generation" => 1,
+                        "legendary" => false
+                    }
+                ]
+            )
+        end
+        it 'return pokemons limit per page and offset' do
+            get '/api/v1/pokemons', params: { per_page: 1, offset: 1 }
+
+            expect(response).to have_http_status(:success)
+            expect(JSON.parse(response.body).size).to eq(1)
+            expect(JSON.parse(response.body)).to eq(
+                [
+                    {
+                        "id" => 2,
+                        "name" => "My Pokemon 2",
+                        "type1" => "My type 1",
+                        "type2" => "My type 2",
+                        "total" => 2,
+                        "hp" => 3,
+                        "attack" => 23,
+                        "defense" => 34,
+                        "spatk" => 3,
+                        "spdef" => 4,
+                        "speed" => 7,
+                        "generation" => 1,
+                        "legendary" => false
+                    }
+                ]
+            )
+        end
+        it 'return pokemons max limit (10) per page' do
+            FactoryBot.create(:pokemon, name: "My Pokemon 3")
+            FactoryBot.create(:pokemon, name: "My Pokemon 4")
+            FactoryBot.create(:pokemon, name: "My Pokemon 5")
+            FactoryBot.create(:pokemon, name: "My Pokemon 6")
+            FactoryBot.create(:pokemon, name: "My Pokemon 7")
+            FactoryBot.create(:pokemon, name: "My Pokemon 8")
+            FactoryBot.create(:pokemon, name: "My Pokemon 9")
+            FactoryBot.create(:pokemon, name: "My Pokemon 10")
+            FactoryBot.create(:pokemon, name: "My Pokemon 11")
+            FactoryBot.create(:pokemon, name: "My Pokemon 12")
+
+            expect(Pokemon.count).to eq(12)
+            get '/api/v1/pokemons'
+
+            expect(response).to have_http_status(:success)
+            expect(JSON.parse(response.body).size).to eq(10)
+        end
     end
 
     describe 'GET /pokemons/:id' do

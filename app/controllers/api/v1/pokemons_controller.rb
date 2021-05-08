@@ -1,9 +1,11 @@
 class Api::V1::PokemonsController < ApplicationController
   before_action :set_pokemon, only: [:show, :update, :destroy]
 
+  MAX_PER_PAGE = 10
+
   # GET /pokemons
   def index
-    @pokemons = Pokemon.all
+    @pokemons = Pokemon.limit(limit_per_page).offset(params[:offset])
 
     render json: @pokemons
   end
@@ -39,6 +41,13 @@ class Api::V1::PokemonsController < ApplicationController
   end
 
   private
+    def limit_per_page
+      [
+        params.fetch(:per_page, MAX_PER_PAGE).to_i,
+        MAX_PER_PAGE
+      ].min
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_pokemon
       @pokemon = Pokemon.find(params[:id])
